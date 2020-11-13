@@ -33,7 +33,7 @@ async function run(): Promise<void> {
     const filter = new Filter(filtersYaml)
     const files = await getChangedFiles(token, base, initialFetchDepth)
     const results = filter.match(files)
-    exportResults(results, listFiles)
+    exportResults(results, listFiles, files.length)
   } catch (error) {
     core.setFailed(error.message)
   }
@@ -165,8 +165,8 @@ async function getChangedFilesFromApi(
   return files
 }
 
-function exportResults(results: FilterResults, format: ExportFormat): void {
-  core.info('Results:')
+function exportResults(results: FilterResults, format: ExportFormat, totalFiles: number): void {
+  core.info(`Results (checked ${totalFiles} files):`)
   for (const [key, files] of Object.entries(results)) {
     const value = files.length > 0
     core.startGroup(`Filter ${key} = ${value}`)

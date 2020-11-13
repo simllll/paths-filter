@@ -4656,7 +4656,7 @@ async function run() {
         const filter = new filter_1.Filter(filtersYaml);
         const files = await getChangedFiles(token, base, initialFetchDepth);
         const results = filter.match(files);
-        exportResults(results, listFiles);
+        exportResults(results, listFiles, files.length);
     }
     catch (error) {
         core.setFailed(error.message);
@@ -4770,8 +4770,8 @@ async function getChangedFilesFromApi(token, pullRequest) {
     } while (((_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.length) > 0);
     return files;
 }
-function exportResults(results, format) {
-    core.info('Results:');
+function exportResults(results, format, totalFiles) {
+    core.info(`Results (checked ${totalFiles} files):`);
     for (const [key, files] of Object.entries(results)) {
         const value = files.length > 0;
         core.startGroup(`Filter ${key} = ${value}`);
